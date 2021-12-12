@@ -90,3 +90,55 @@ WHERE (birth_date BETWEEN '1952-01-01' AND '1955-12-31')
 AND (hire_date BETWEEN '1985-01-01' and '1988-12-31')
 
 SELECT * FROM retirement_info
+
+--7.3.2 Join the tables
+--drop the current retirement info table b/c we need to recreate with new columns
+	--DROP TABLE retirement_info;
+SELECT  emp_no, first_name, last_name
+INTO retirement_info
+FROM employees
+WHERE (birth_date BETWEEN '1952-01-01' AND '1955-12-31') 
+AND (hire_date BETWEEN '1985-01-01' and '1988-12-31')
+-- Check the table
+SELECT * FROM retirement_info;
+
+
+--joining departments and dept_manager tables
+SELECT departments.dept_name,
+	dept_manager.emp_no,
+	dept_manager.from_date,
+	dept_manager.to_date
+FROM departments
+INNER JOIN dept_manager
+ON departments.dept_no = dept_manager.dept_no;
+
+
+--Joining retirement_info and dept_emp tables, with aliases
+SELECT ri_info.emp_no,
+	ri_info.first_name,
+	ri_info.last_name,
+	de_emp.to_date
+FROM retirement_info as ri
+LEFT JOIN dept_emp as de
+ON ri_info.emp_no = di_emp.emp_no;
+
+--update table aliases
+--joining departments and dept_manager tables
+SELECT dd.dept_name,
+	dm.emp_no,
+	dm.from_date,
+	dm.to_date
+FROM departments as d
+INNER JOIN dept_manager as dm
+ON d.dept_no = dm.dept_no;
+
+--make sure employees are still with the company
+SELECT ri.emp_no,
+	ri.first_name,
+	ri.last_name,
+	de.to_date
+INTO current_emp
+FROM retirement_info as ri
+LEFT JOIN dept_emp as de
+ON ri.emp_no = de.emp_no
+where de.to_Date = ('9999-01-01')
